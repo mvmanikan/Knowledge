@@ -1,0 +1,82 @@
+Sqoop commands:
+---------------
+
+List Databases:
+---------------
+
+sqoop list-databases \
+  --connect jdbc:mysql://ms.itversity.com:3306 \
+  --username retail_user \
+  --password itversity
+  
+List Tables:
+------------
+
+sqoop list-tables \
+    --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+	--username retail_user \
+	--password itversity
+	
+Select Queries:
+---------------
+
+sqoop eval \
+  --connect jdbc:mysql://ms.itversity.com/retail_db \
+  --username retail_user \
+  --password itversity \
+  --query "SELECT * FROM orders LIMIT 10"
+  
+Insert Queries:
+---------------  
+
+sqoop eval \
+  --connect jdbc:mysql://ms.itversity.com/retail_db \
+  --username retail_user \
+  --password itversity \
+  --query "INSERT INTO orders values(11,'2013-07-25 00:==:==.0', 11111, 'CLOSED')"
+  
+Create Table, then Insert and select:
+-------------------------------------   
+
+sqoop eval \
+  --connect jdbc:mysql://ms.itversity.com/retail_export \
+  --username retail_user \
+  --password itversity \
+  --query "CREATE TABLE dummy(i int)"
+
+sqoop eval \
+  --connect jdbc:mysql://ms.itversity.com/retail_export \
+  --username retail_user \
+  --password itversity \
+  --e "INSERT INTO mvmanikan VALUES(9)"
+
+ sqoop eval \
+  --connect jdbc:mysql://ms.itversity.com/retail_export \
+  --username retail_user \
+  --password itversity \
+  --e "SELECT * FROM mvmanikan"
+  
+Delete Query:
+------------- 
+
+ sqoop eval \
+  --connect jdbc:mysql://ms.itversity.com/retail_export \
+  --username retail_user \
+  --password itversity \
+  --e "DELETE FROM mvmanikan"
+
+ sqoop eval \
+  --connect jdbc:mysql://ms.itversity.com/retail_export \
+  --username retail_user \
+  --password itversity \
+  --e "SELECT * FROM mvmanikan"
+
+Import from mySQL to HDFS directory:
+------------------------------------ 
+
+  sqoop import \
+  --connect jdbc:mysql://ms.itversity.com/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --target-dir /user/mvmanikan/sqoop-import/retail-db/order_items
