@@ -1,0 +1,536 @@
+07.04.2019
+
+All collections of Sqoop Commands:
+----------------------------------
+
+03.04.2019 Night
+----------------
+Lecture 40 and 41 - Practise
+-----------------------------
+
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/mvmanikan/sqoop-import/retail_db/ \
+  --num-mappers 1
+
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/mvmanikan/sqoop-import/retail_db/ \
+  --num-mappers 1 \
+  --delete-target-dir
+
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/mvmanikan/sqoop-import/retail_db/ \
+  --num-mappers 1 \
+  --append
+
+
+05.04.2019
+
+--- ITVersity
+
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --m 1
+
+---Cloudera
+
+--connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+
+  sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username root \
+  --password cloudera \
+  --table order_items \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --m 1 \
+  --delete-target-dir
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username root \
+  --password cloudera \
+  --table order_items \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --num-mappers 1 \
+  --append
+
+Lecture 42 - File Import -Split-by
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username root \
+  --password cloudera \
+  --table order_items \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --num-mappers 4 \
+  --delete-target-dir \
+  --split-by order_item_quantity
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username root \
+  --password cloudera \
+  --table orders \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --num-mappers 2 \
+  --delete-target-dir \
+  --split-by order_status  
+
+Below one worked:
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username root \
+  --password cloudera \
+  --table orders \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --num-mappers 2 \
+  --delete-target-dir \
+  --split-by order_status 
+
+Lecture 43: File Format
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username root \
+  --password cloudera \
+  --table orders \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --num-mappers 2 \
+  --as-sequencefile
+
+Lecture 44: Compression Algorithms
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username root \
+  --password cloudera \
+  --table orders \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --num-mappers 2 \
+  --as-textfile \
+  --compress \
+  --compression-codec org.apache.hadoop.io.compress.GzipCodec
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username root \
+  --password cloudera \
+  --table orders \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  --num-mappers 2 \
+  --delete-target-dir \
+  --as-textfile \
+  --compress \
+  --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+  
+05.04.2019 
+
+Lecture 46: Columns and Query
+------------------------------
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera \
+  --warehouse-dir /user/cloudera/sqoop-import/retail_db \
+  --table order_items \
+  --columns order_item_id,order_item_order_id,order_item_product_id \
+  --num-mappers 2
+
+// where or 'on' can be used
+// 'as' also can be used
+
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera \
+  --target-dir /user/cloudera/sqoop-import/retail_db/orders_with_revenue \
+  --query "select o.*,max(oi.order_item_subtotal) order_item_revenue from order_items oi join orders o where o.order_id = oi.order_item_id and \$CONDITIONS group by o.order_id,o.order_date,o.order_customer_id,o.order_status" \
+  --split-by order_id \
+  --num-mappers 2  
+
+select o.*,max(oi.order_item_subtotal) order_item_revenue from order_items oi join orders o where o.order_id = oi.order_item_id group by o.order_id,o.order_date,o.order_customer_id,o.order_status;
+
+Lecture 47: auto reset to one mapper
+------------------------------------
+
+sqoop import \
+ --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+ --username retail_dba \
+ --password cloudera \
+ --table order_items_nopk \
+ --warehouse-dir /user/cloudera/sqoop-import/retail_db \
+ --autoreset-to-one-mapper
+
+Lecture 48: Delimiters and handling nulls
+-----------------------------------------
+
+Nomal behaviour : sqoop import
+sqoop import \
+ --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+ --username retail_dba \
+ --password cloudera \
+ --table departments \
+ --warehouse-dir /user/cloudera/sqoop-import/retail_db
+
+sqoop import \
+ --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+ --username retail_dba \
+ --password cloudera \
+ --table departments \
+ --warehouse-dir /user/cloudera/sqoop-import/retail_db \
+ --delete-target-dir \
+ --null-non-string -1 \
+ --fields-terminated-by "\t" \
+ --lines-terminated-by "$"
+
+Answer : 2^@Fitness:3^@Footwear:
+
+Answer : 2       Fitness$3       Footwear$
+--
+
+hadoop fs -ls /user/cloudera/sqoop-import/retail_db/*
+hadoop fs -get /user/cloudera/sqoop-import/retail_db/departments .
+cd departments
+ls -ltr
+view part-m-00000
+
+rm -rf departments
+----
+
+Lecture 49: Boundary Queries
+----------------------------
+
+# Baseline import
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera \
+  --target-dir /user/cloudera/sqoop_import/retail_db/orders \
+  --delete-target-dir \
+  --num-mappers 2 \
+  --query "select * from orders where \$CONDITIONS and order_date like '2013-%'" \
+  --split-by order_id
+
+  Retrieved 30662 records
+
+# Query can be used to load data based on condition
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera \
+  --target-dir /user/cloudera/sqoop_import/retail_db/orders \
+  --num-mappers 2 \
+  --query "select * from orders where \$CONDITIONS and order_date like '2014-01%'" \
+  --split-by order_id \
+  --append
+
+Retrieved 5908 records.
+
+
+# where in conjunction with table can be used to get data based up on a condition
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera \
+  --target-dir /user/cloudera/sqoop_import/retail_db/orders \
+  --num-mappers 2 \
+  --table orders \
+  --where "order_date like '2014-02%'" \
+  --append
+
+Retrieved 5635 records
+
+# where in conjunction with table can be used to get data based up on a condition
+sqoop import \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera \
+  --target-dir /user/cloudera/sqoop_import/retail_db/orders \
+  --num-mappers 2 \
+  --table orders \
+  --check-column order_date \
+  --incremental append \
+  --last-value '2014-02-28'
+
+Retrieved 26678 records  
+  
+
+  07.04.2019
+
+  Lecture 51: Sqoop Import - Hive - Simple Hive Import
+  ----------------------------------------------------
+
+--warehouse-dir /user/cloudera/sqoop-import/retails_db/ -- This line is not needed.
+
+create table order_items (order_item_id int,
+  							order_item_order_id int,
+  							order_item_product_id int,
+  							order_item_quantity tinyint,
+  							order_item_subtotal float,
+  							order_item_product_price float);
+
+Above create table is not needed because when hive-import is used, it will create table, if
+not exisits  							
+
+ sqoop import \
+   --connect jdbc:mysql://quickstart.cloudera/retail_db \
+   --username retail_dba \
+   --password cloudera \
+   --table order_items \
+   --num-mappers 2 \
+   --hive-import \
+   --hive-database mvmanikan_sqoop_import \
+   --hive-table order_items
+
+Lecture 52: Sqoop Import - Hive - Managing Hive Tables
+------------------------------------------------------
+
+sqoop import \
+  	--connect jdbc:mysql://quickstart.cloudera/retail_db \
+  	--username retail_dba \
+  	--password cloudera \
+  	--table order_items \
+  	--num-mappers 2 \
+  	--hive-import \
+  	--create-hive-table \
+  	--hive-database mvmanikan_sqoop_import \
+  	--hive-table order_items 
+
+sqoop import \
+  	--connect jdbc:mysql://quickstart.cloudera/retail_db \
+  	--username retail_dba \
+  	--password cloudera \
+  	--table order_items \
+  	--num-mappers 2 \
+  	--hive-import \
+  	--hive-overwrite \
+  	--hive-database mvmanikan_sqoop_import \
+  	--hive-table order_items
+
+Lecture 53: Sqoop Import all tables
+-----------------------------------
+
+sqoop import-all-tables \
+  	--connect jdbc:mysql://quickstart.cloudera/retail_db \
+  	--username retail_dba \
+  	--password cloudera \
+  	--warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  	--autoreset-to-one-mapper \
+  	--hive-import \
+  	--hive-overwrite \
+  	--hive-database mvmanikan_sqoop_import
+
+
+sqoop import-all-tables \
+  	--connect jdbc:mysql://quickstart.cloudera/retail_db \
+  	--username retail_dba \
+  	--password cloudera \
+  	--warehouse-dir /user/cloudera/sqoop-import/retail_db/ \
+  	--autoreset-to-one-mapper \
+  	--exclude-tables order_items,customers,categories \
+  	--hive-import \
+  	--hive-overwrite \
+  	--hive-database mvmanikan_sqoop_import
+
+sqoop import-all-tables \
+    --connect jdbc:mysql://quickstart.cloudera/retail_db \
+    --username retail_dba \
+    --password cloudera \
+    --warehouse-dir /Public/retail_db/ \
+    --autoreset-to-one-mapper
+
+
+
+Lecture 54: Sqoop Export - Role in data processing life cycle
+-------------------------------------------------------------
+
+create table daily_revenue as
+select order_date, sum(order_item_subtotal) daily_revenue
+from orders join order_items on
+order_id = order_item_order_id
+where order_date like '2013-07%'
+group by order_date;
+
+Lecture 55: Sqoop Export - Simple Export with delimiters
+--------------------------------------------------------
+
+---> created in retail_db database
+
+create table daily_revenue(order_date varchar(30),
+revenue float);
+
+---> hive
+show databases;
+use mvmanikan_sqoop_import;
+describe mvmanikan_sqoop_import;
+describe formatted mvmanikan_sqoop_import;
+
+sqoop export \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera  \
+  --export-dir /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue \
+  --table daily_revenue \
+  --input-fields-terminated-by "\001"
+
+Lecture 56: Sqoop Export - Understanding Export behaviour
+---------------------------------------------------------
+
+hadoop fs -ls /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue (or)
+hadoop fs -ls /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue/*
+hadoop fs -get /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue
+cd daily_revenue
+ls -ltr
+vi 000000_0
+
+Lecture 57: Sqoop Export - Column mapping
+-----------------------------------------
+
+create table daily_revenue_demo(order_date varchar(30),
+revenue float,
+description varchar(200));
+
+sqoop export \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera \
+  --export-dir /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue \
+  --table daily_revenue_demo \
+  --input-fields-terminated-by "\001" \
+  --columns order_date,revenue \
+  --num-mappers 1
+
+Lecture 58: Sqoop Export - Update and Upsert
+--------------------------------------------
+
+Updating data
+--------------
+
+create table daily_revenue(order_date varchar(30) primary key, revenue float);
+
+sqoop export \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera  \
+  --export-dir /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue \
+  --table daily_revenue \
+  --input-fields-terminated-by "\001" \
+  --num-mappers 1
+
+  7 records
+
+Sqoop Export – Update
+---------------------
+
+insert into daily_revenue
+select order_date, sum(order_item_subtotal) daily_revenue
+from orders join order_items on
+order_id = order_item_order_id
+where order_date like '2013-07%'
+group by order_date;  
+
+Update the table
+----------------
+
+update daily_revenue set revenue = 0;
+
+sqoop export \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera  \
+  --export-dir /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue \
+  --table daily_revenue \
+  --update-key order_date \
+  --input-fields-terminated-by "\001" \
+  --num-mappers 1
+
+Upsert(Merge) the table
+-----------------------
+
+sqoop export \
+  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+  --username retail_dba \
+  --password cloudera  \
+  --export-dir /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue \
+  --table daily_revenue \
+  --update-key order_date \
+  --update-mode allowinsert \
+  --input-fields-terminated-by "\001" \
+  --num-mappers 1 
+
+Lecture 59: Sqoop Export - Stage Tables
+---------------------------------------
+
+Launch Hive and insert data into table: (Insert into table syntax is working in Hive)
+
+insert into table daily_revenue
+ select order_date, sum(order_item_subtotal) daily_revenue
+ from orders join order_items on
+ order_id = order_item_order_id
+ where order_date > '2013-08'
+ group by order_date;
+
+sqoop export \
+--connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+--username retail_dba \
+--password cloudera \
+--export-dir /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue \
+--table daily_revenue \
+--input-fields-terminated-by "\001" \
+--num-mappers 1
+
+364 records
+
+Creating stage table:
+
+create table daily_revenue_stage (
+order_date varchar(30) primary key,
+revenue float
+);
+
+Insert values into the table
+----------------------------
+
+insert into daily_revenue values ("2014-07-01 00:00:00.0", 0);
+
+Run the stage table
+-------------------
+
+sqoop export \
+--connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+--username retail_dba \
+--password cloudera \
+--export-dir /user/hive/warehouse/mvmanikan_sqoop_import.db/daily_revenue \
+--table daily_revenue \
+--staging-table daily_revenue_stage \
+--input-fields-terminated-by "\001" \
+--num-mappers 1
+
+
+
+
+
+
+
+
+  
+
+
+
