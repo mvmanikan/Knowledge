@@ -1,0 +1,80 @@
+// OnedimenArrayMain program
+
+package com.ckv.arrays;
+
+public class OnedimenArrayMain {
+    public static void main(String[] args) {
+        // 20.12.2018 Arrays
+        // One dimensional Array
+        OnedimenArray oda = new OnedimenArray();
+        oda.getMinMax();
+        oda = null;
+    }
+}
+
+// OnedimenArray program
+
+package com.ckv.arrays;
+
+public class OnedimenArray {
+    // 20.12.2018
+    // One dimensional Array
+    // Step 1 : Declare the Array
+    private int[] marks;
+
+    // Constructor
+    public OnedimenArray(){
+        // Step 2 : Allocate the memory or Initialize the variable
+        marks = new int[5];
+        marks[0] = 45;
+        marks[1] = 35;
+        marks[2] = 40;
+        marks[3] = 87;
+        marks[4] = 78;
+    }
+
+    // Find the minimum and maximum marks in an array
+    public void getMinMax(){
+        int min = marks[0];
+        int max = marks[0];
+        for (int i=0;i<marks.length;i++){
+            System.out.println("All marks: " + marks[i]);
+            if (min > marks[i])
+                min = marks[i];
+            if (max < marks[i])
+                max = marks[i];
+            System.out.println("min: " + min);
+            System.out.println("max: " + max);
+        }
+        System.out.println("Minimum marks: " + min);
+        System.out.println("Maximum marks: " + max);
+    }
+
+    /* Display the minimum and maximum values
+    public void printDisplay(){
+        System.out.println("Minimum marks: " + min);
+    }
+    */
+}
+
+Output:
+"C:\Program Files\Java\jdk1.8.0_191\bin\java.exe" -javaagent:C:\Users\dell\AppData\Local\JetBrains\Toolbox\apps\IDEA-C\ch-0\183.5912.21\lib\idea_rt.jar=51756:C:\Users\dell\AppData\Local\JetBrains\Toolbox\apps\IDEA-C\ch-0\183.5912.21\bin -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_191\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\rt.jar;C:\Users\dell\eclipse-workspace\Amman\bin" com.ckv.arrays.OnedimenArrayMain
+All marks: 45
+min: 45
+max: 45
+All marks: 35
+min: 35
+max: 45
+All marks: 40
+min: 35
+max: 45
+All marks: 87
+min: 35
+max: 87
+All marks: 78
+min: 35
+max: 87
+Minimum marks: 35
+Maximum marks: 87
+
+Process finished with exit code 0
